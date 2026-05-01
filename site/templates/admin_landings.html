@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landings - {{ APP_NAME }} Admin</title>
+    <link rel="icon" href="/static/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 15px) scale(0.95); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #060608;
+            min-height: 100vh;
+            color: #e0e0e5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(192,192,200,.04) 0%, transparent 70%);
+            animation: orbFloat 20s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(192,192,200,.03) 0%, transparent 70%);
+            animation: orbFloat 25s ease-in-out infinite reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(6, 6, 8, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #e0e0e5;
+            letter-spacing: -0.3px;
+        }
+
+        .navbar-brand svg {
+            width: 22px;
+            height: 22px;
+            stroke: #c0c0c8;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            color: #5a5a65;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .navbar-menu a:hover {
+            color: #e0e0e5;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .navbar-menu a.active {
+            color: #c0c0c8;
+            background: rgba(192, 192, 200, 0.08);
+        }
+
+        .logout-btn {
+            color: #5a5a65 !important;
+            margin-left: 12px;
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            padding-left: 20px !important;
+        }
+
+        .logout-btn:hover {
+            color: #e0e0e5 !important;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            color: #e0e0e5;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            color: #5a5a65;
+            font-size: 14px;
+        }
+
+        .landing-card {
+            background: #0d0d10;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .landing-card:nth-child(1) { animation-delay: 0.05s; }
+        .landing-card:nth-child(2) { animation-delay: 0.1s; }
+        .landing-card:nth-child(3) { animation-delay: 0.15s; }
+        .landing-card:nth-child(4) { animation-delay: 0.2s; }
+        .landing-card:nth-child(5) { animation-delay: 0.25s; }
+        .landing-card:nth-child(6) { animation-delay: 0.3s; }
+        .landing-card:nth-child(7) { animation-delay: 0.35s; }
+        .landing-card:nth-child(8) { animation-delay: 0.4s; }
+
+        .landing-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .landing-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .landing-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e0e0e5;
+            letter-spacing: -0.2px;
+        }
+
+        .landing-url {
+            font-size: 13px;
+            color: #5a5a65;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .landing-status {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+        }
+
+        .status-on {
+            color: #7dd3a0;
+            background: rgba(125, 211, 160, 0.08);
+            border: 1px solid rgba(125, 211, 160, 0.15);
+        }
+
+        .status-on::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7dd3a0;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        .status-off {
+            color: #808090;
+            background: rgba(128, 128, 144, 0.08);
+            border: 1px solid rgba(128, 128, 144, 0.15);
+        }
+
+        .toggle {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #5a5a65;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+            background: #e0e0e5;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .save-btn {
+            margin-top: 24px;
+            background: linear-gradient(135deg, #1a1a20 0%, #2a2a32 100%);
+            color: #e0e0e5;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .save-btn:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 0 16px; }
+            .navbar-menu { gap: 2px; }
+            .navbar-menu a { padding: 6px 8px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span>{{ APP_NAME }} Admin</span>
+        </div>
+        <div class="navbar-menu">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('admin_cookies') }}">Cookies</a>
+            <a href="{{ url_for('admin_landings') }}" class="active">Landings</a>
+            <a href="{{ url_for('admin_settings') }}">Settings</a>
+            <form method="POST" action="{{ url_for('admin_logout') }}" style="display:inline"><button type="submit" class="logout-btn" style="background:none;border:none;cursor:pointer;font:inherit">Logout</button></form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Landings</h1>
+            <p>Включай и выключай лендинги. Выключенный лендинг отдаёт 404.</p>
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% for l in landings_list %}
+            <div class="landing-card">
+                <div class="landing-info">
+                    <div class="landing-name">{{ l.name }}</div>
+                    <div class="landing-url">{{ l.url }}</div>
+                    <div class="landing-status {{ 'status-on' if l.enabled else 'status-off' }}">
+                        {{ 'active' if l.enabled else 'disabled' }}
+                    </div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" name="landing_{{ l.key }}" {{ 'checked' if l.enabled }}>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="save-btn">Save</button>
+        </form>
+    </div>
+</body>
+</html>

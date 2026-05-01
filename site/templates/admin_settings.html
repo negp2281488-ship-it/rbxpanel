@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin Panel</title>
+    <link rel="icon" href="/static/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(60px, -40px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(-60px, -20px) scale(1.05); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(120px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #060608;
+            min-height: 100vh;
+            color: #e0e0e5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(192,192,200,.04) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+            animation: orbFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(192,192,200,.03) 0%, transparent 70%);
+            bottom: -80px;
+            right: -80px;
+            animation: orbFloat 25s ease-in-out infinite reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .navbar {
+            background: rgba(6,6,8,.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #e0e0e5;
+            letter-spacing: -0.3px;
+        }
+
+        .navbar-brand svg {
+            width: 22px;
+            height: 22px;
+            stroke: #c0c0c8;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            color: #5a5a65;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .navbar-menu a:hover {
+            color: #e0e0e5;
+            background: rgba(255,255,255,.04);
+        }
+
+        .navbar-menu a.active {
+            color: #c0c0c8;
+            background: rgba(255,255,255,.06);
+        }
+
+        .logout-btn {
+            color: #5a5a65 !important;
+            margin-left: 12px;
+            border-left: 1px solid rgba(255,255,255,.06);
+            padding-left: 20px !important;
+        }
+
+        .logout-btn:hover {
+            color: #e0e0e5 !important;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            color: #e0e0e5;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            color: #5a5a65;
+            font-size: 14px;
+        }
+
+        .settings-card {
+            background: #0d0d10;
+            border: 1px solid rgba(255,255,255,.05);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .settings-card:nth-child(1) { animation-delay: 0.1s; }
+        .settings-card:nth-child(2) { animation-delay: 0.25s; }
+
+        .settings-card:hover {
+            border-color: rgba(255,255,255,.12);
+        }
+
+        .settings-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+
+        .settings-header h2 {
+            font-size: 16px;
+            color: #e0e0e5;
+            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .settings-header p {
+            font-size: 13px;
+            color: #5a5a65;
+        }
+
+        .settings-body {
+            padding: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #5a5a65;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #e0e0e5;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,.2);
+            background: rgba(255,255,255,.04);
+            box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #1a1a20 0%, #2a2a32 100%);
+            color: #e0e0e5;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.06) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .submit-btn:hover {
+            border-color: rgba(255,255,255,.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0,0,0,.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            border: 1px solid;
+            animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .alert-success {
+            background: rgba(255,255,255,.04);
+            color: #a0a0b0;
+            border-color: rgba(255,255,255,.08);
+        }
+
+        .alert-error {
+            background: rgba(255,80,80,.06);
+            color: #ff6b6b;
+            border-color: rgba(255,80,80,.15);
+        }
+
+        .info-box {
+            background: rgba(255,255,255,.02);
+            border: 1px solid rgba(255,255,255,.04);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+        }
+
+        .info-box p {
+            color: #5a5a65;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .info-row:hover {
+            padding-left: 8px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row span {
+            color: #5a5a65;
+            font-size: 13px;
+        }
+
+        .info-row strong {
+            color: #e0e0e5;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 0 16px; }
+            .navbar-menu { gap: 2px; }
+            .navbar-menu a { padding: 6px 8px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span>Admin Panel</span>
+        </div>
+        <div class="navbar-menu">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('admin_cookies') }}">Cookies</a>
+            <a href="{{ url_for('admin_landings') }}">Landings</a>
+            <a href="{{ url_for('admin_settings') }}" class="active">Settings</a>
+            <form method="POST" action="{{ url_for('admin_logout') }}" style="display:inline"><button type="submit" class="logout-btn" style="background:none;border:none;cursor:pointer;font:inherit">Logout</button></form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Settings</h1>
+            <p>Account & system configuration</p>
+        </div>
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2>Change Password</h2>
+                <p>Update your admin panel password</p>
+            </div>
+            <div class="settings-body">
+                <div class="info-box">
+                    <p>Password must be at least 8 characters. You will need to log in again after changing.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('admin_settings') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-group">
+                        <label for="old_password">Current Password</label>
+                        <input type="password" id="old_password" name="old_password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" id="new_password" name="new_password" required minlength="8">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
+                    </div>
+
+                    <button type="submit" class="submit-btn">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2>Sessions</h2>
+                <p>Manage active admin sessions</p>
+            </div>
+            <div class="settings-body">
+                <div class="info-row" style="flex-direction:column;align-items:flex-start;gap:12px">
+                    <div>
+                        <strong style="color:#e0e0e5;display:block;margin-bottom:4px">Kick All Devices</strong>
+                        <span style="font-size:13px;color:#5a5a65">Invalidates all active sessions across every browser and device. You will be logged out too.</span>
+                    </div>
+                    <button id="revokeBtn" onclick="revokeAllSessions()" style="padding:10px 22px;background:linear-gradient(135deg,#1a0d0d,#2a1010);border:1px solid rgba(255,80,80,.2);color:#ff6666;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s">
+                        Logout from All Devices
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2>System Information</h2>
+                <p>Current panel information</p>
+            </div>
+            <div class="settings-body">
+                <div class="info-row">
+                    <span>Username</span>
+                    <strong>{{ username }}</strong>
+                </div>
+                <div class="info-row">
+                    <span>Panel Version</span>
+                    <strong>1.0.0</strong>
+                </div>
+                <div class="info-row">
+                    <span>Database</span>
+                    <strong>SQLite3</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function revokeAllSessions() {
+        if (!confirm('Logout from ALL devices? You will be redirected to login.')) return;
+        var btn = document.getElementById('revokeBtn');
+        btn.disabled = true;
+        btn.textContent = 'Revoking...';
+        fetch('{{ admin_url }}/revoke-sessions', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'csrf_token={{ csrf_token() }}'
+        }).then(function(r){ return r.json(); }).then(function(d){
+            if (d.success) {
+                window.location.href = '{{ admin_url }}/login';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Logout from All Devices';
+                alert('Error: ' + (d.error || 'unknown'));
+            }
+        }).catch(function(){
+            window.location.href = '{{ admin_url }}/login';
+        });
+    }
+    </script>
+</body>
+</html>

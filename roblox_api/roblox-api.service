@@ -1,0 +1,33 @@
+[Unit]
+Description=Roblox Cookie Checker API
+After=network.target
+
+[Service]
+Type=exec
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/roblox_api
+Environment="PATH=/home/ubuntu/roblox_api/venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/home/ubuntu/roblox_api/venv/bin/gunicorn --config gunicorn_config.py flask_api:app
+
+# Restart policy
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=roblox-api
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits (опционально)
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
+
